@@ -1,0 +1,132 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+class Hash_Function
+{
+private:
+	struct node
+	{
+		int acctnum;
+		string name;
+		float balance;
+		node* next;
+	};
+
+	node *H[5];
+
+public:
+	void clearTable()
+	{
+		for (int i = 0; i < 5; ++i)
+		{
+			H[i] = NULL;
+		}
+	}
+
+	int hashfunction(int x)
+	{
+		return x % 5;
+	}
+
+	void insert( int x, string y, float z)
+	{
+		node *p = new node;
+		int hashvalue = hashfunction(x);
+		p->acctnum = x;
+		p->name = y;
+		p->balance = z;
+		p->next = H[hashvalue];
+		H[hashvalue] = p;
+	}
+	
+	void showbalance()
+	{
+		int accnumb;
+		cout << "Please enter your account number";
+		cin >> accnumb;
+		int hashvalue = hashfunction(accnumb);
+		node *p = H[hashvalue];
+		while (p != NULL && accnumb != p->acctnum)
+		{
+			p = p->next;
+		}
+		cout << p->balance;
+	}
+	void loadfile(string fname)
+	{
+		cout << fixed << showpoint << setprecision(2);
+		int a;
+		string b;
+		float c;
+		fstream f;
+		f.open(fname, ios::in);
+		for (int i = 0; i < 6; ++i)
+		{
+			f >> a;
+			f >> b;
+			f >> c;
+			insert(a, b, c);
+		}
+		f.close();
+	}
+	void withdraw()
+	{
+		int acctnum;
+		cout << "Please enter your account number\n ";
+		cin >> acctnum;
+		int hashvalue = hashfunction(acctnum);
+		node *p = H[hashvalue];
+		while (p != NULL && acctnum != p->acctnum)
+		{
+			p = p->next;
+		}
+		cout <<p->name<< " how much would you like to withdraw?";
+		float withdraw;
+		cin >> withdraw;
+		p->balance -= withdraw;
+		cout << "\nYour new balance is: " << p->balance;
+		cout << endl;
+		
+	}
+	
+};
+
+
+
+int main()
+{
+	Hash_Function object1;
+	object1.clearTable();
+	bool cont = false;
+	while (!cont)
+	{
+		cout << "---------------Menu--------------------\n";
+		cout << "1. Show my balance\n";
+		cout << "2. Withdraw from my account\n";
+		cout << "3. Withdraw from my account\n";
+		cout << "4. Show me all\n";
+
+		cout << "\nPlease make your selection from the list above\n";
+		int selection;
+		cin >> selection;
+		if (selection == 1)
+		{
+			object1.loadfile("Text.txt");
+			object1.showbalance();
+		}
+		else if (selection == 2)
+		{
+			object1.loadfile("Text.txt");
+			object1.withdraw();
+		}
+		cout << "\n Continue?(0 or 1)";
+		cin >> cont;
+	}
+	
+	system("pause");
+	return 0;
+}
