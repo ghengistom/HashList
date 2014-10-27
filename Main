@@ -92,6 +92,24 @@ public:
 		cout << endl;
 		
 	}
+	void Deposit()
+	{
+		loadfile("Text.txt");
+		cout << "Please enter your account number";
+		int acctnum;
+		cin >> acctnum;
+		int hashval = hashfunction(acctnum);
+		node* p=H[hashval];
+		while (p != NULL && acctnum != p->acctnum)
+		{
+			p = p->next;
+		}
+		cout << p->name << " your account balance is: " << p->balance << "\n How much would you like to deposit?\n";
+		float withdraw;
+		cin >> withdraw;
+		p->balance += withdraw;
+		cout << "Your new account balance is: " << p->balance;
+	}
 	
 };
 
@@ -122,6 +140,11 @@ int main()
 		{
 			object1.loadfile("Text.txt");
 			object1.withdraw();
+		}
+		else if (selection == 3)
+		{
+			object1.loadfile("Text.txt");
+			object1.Deposit();
 		}
 		cout << "\n Continue?(0 or 1)";
 		cin >> cont;
